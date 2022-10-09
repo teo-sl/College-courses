@@ -1,0 +1,14 @@
+c = 1 
+L = <R>
+flag = True
+if (L=0) and (flag) return FAIL
+if (L=0) and (!flag) c++ goto 2)
+else n = pop(L)
+     if goal(n) return n+path
+     else
+        for s in children(n)
+            if(depth(s)<=c)
+                push(s,L)
+            else
+                flag = False
+        goto 4)
