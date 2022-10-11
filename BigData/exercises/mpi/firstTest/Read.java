@@ -1,4 +1,4 @@
-package exercises;
+package exercises.mpi.firstTest;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;

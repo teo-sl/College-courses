@@ -36,9 +36,9 @@ Un  gioco  strategico  con  preferenze  ordinali  è un  gioco  composto da:
 
 ## Definizione 
 
-In un gioco strategico con preferenze ordinali il profilo di azioni $s^*$ è un equilibrio di Nash se per ogni giocatore $\textit{i}$ ed ogni sua azione $s_i$, $s^*$ è altrettanto buono quanto il profilo di azioni $(s_i,s^*_{-i}$ rispetto alle preferenze di $i$. Equivalentemente:
+In un gioco strategico con preferenze ordinali il profilo di azioni $s^*$ è un equilibrio di Nash se per ogni giocatore $\textit{i}$ ed ogni sua azione $s_i$, $s^*$ è altrettanto buono quanto il profilo di azioni $(s_i,s^*_{-i})$ rispetto alle preferenze di $i$ . Equivalentemente:
 
-$$u_i(s^*) \geq u_i(s_i,s^*_{-i}), \forall s_i \in S_i, \forall i \in N$$
+$$ u_i(s^*) \geq u_i(s_i,s^*_{-i}), \forall s_i \in S_i, \forall i \in N $$
 
 Ovvero, la scelta di i è migliore rispetto a qualsiasi scelta presa dagli avversari. Nel gioco del progioniero
 
@@ -58,6 +58,19 @@ Notiamo che, quindi, l'equilibrio di nash è qui il confessare per entrambi. Dif
 Un'ulteriore definizione:
 
 ![Nash equilibrium](images/nash_definition.png)
+
+
+## Ulteriore definizione di equilibrio di Nash
+
+Per qualsiasi profilo di azioni attuato dagli avversari del giocatore $i$, $s_{-i} \in S_{-i}$, definiamo tramite $B_i(s_{-i})$ la funzione best response come l'insieme delle migliori risposte che il giocatore i può adoperare dato il comportamento dei suoi avversari:
+
+$$B_i(s_{-i}) \equiv {s_i \in S_i : u_i(s_i,s_{-i}) \ge u_i(s^{'}_i,s_{-i}), \forall s^{'}_i \in S_i }$$
+
+L'equilirio di Nash può essere perciò definito come: in un gioco strategico con preferenze ordinali il profilo di azioni $s^*$ è un equilibrio di Nash se:
+
+$$s^*_i \in B_i(s^*_{-i}, \forall i \in N$$
+
+Ovvero, se ogni giocatore risponde nel modo migliore delle azioni intraprese dai suoi avversari.
 
 
 

@@ -1,4 +1,4 @@
-package fileRead;
+package exercises.mpi.fileRead;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
