@@ -1,4 +1,4 @@
-package BigData.exercises.streams.itcompany_orig;
+package exercises.streams.itcompany_orig;
 
 import java.io.IOException;
 import java.util.ArrayList;

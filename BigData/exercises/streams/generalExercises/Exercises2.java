@@ -1,6 +1,5 @@
-package BigData.exercises.streams;
+package exercises.streams.generalExercises;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,12 +35,6 @@ public class Exercises2 {
         System.out.println("res3: "+res3);
 
         
-    }
-
-    private static List<String> merge(List<String> a, List<String> b) {
-        if(a.contains(b.get(0))) return a;
-        a.add(b.get(0));
-        return a;
     }
 
 }

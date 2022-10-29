@@ -1,4 +1,4 @@
-package BigData.exercises.streams;
+package exercises.streams.generalExercises;
 
 import java.util.stream.IntStream;
 
