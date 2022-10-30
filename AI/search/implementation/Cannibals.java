@@ -3,8 +3,6 @@ package search.implementation;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
 import search.abstraction.AbstractNode;
 import search.interfaces.Node;
 
@@ -13,13 +11,15 @@ public class Cannibals extends AbstractNode {
     private int[][] data = new int[2][3];// M C B
 
     public Cannibals(int[][] data, Node father) {
+        super(father);
         this.data=data;
-        this.setFather(father);
+        
         this.computeEur();
     }
 
     // For the root node
     public Cannibals() {
+        super(null);
         data[0][0]=3;
         data[0][1]=3;
         data[0][2]=1;

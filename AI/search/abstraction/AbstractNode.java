@@ -12,6 +12,14 @@ public abstract class AbstractNode implements Node {
     protected Node father;
     protected int cost;
 
+    public AbstractNode(Node father) {
+        if(father!=null)
+            setFather(father);
+        else
+            depth=0;
+        
+    }
+
     public int getDepth() {
         return this.depth;
     }

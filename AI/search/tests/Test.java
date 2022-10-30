@@ -3,9 +3,6 @@ package search.tests;
 import java.util.List;
 
 import search.algorithms.BestFirst;
-import search.algorithms.BreadthFirst;
-import search.algorithms.DepthFirst;
-import search.algorithms.IterativeDeepening;
 import search.implementation.Puzzle8;
 import search.interfaces.Node;
 

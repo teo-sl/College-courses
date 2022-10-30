@@ -27,6 +27,7 @@ public class Puzzle8 extends AbstractNode {
     );
 
     public Puzzle8(int[][] data) {
+        super(null);
         boolean found=false;
         this.data=data;
         

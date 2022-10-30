@@ -1,4 +1,4 @@
-package search.strips.model;
+package search.implementation.strips.model;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +9,6 @@ import search.interfaces.Node;
 
 public class StripsNode extends AbstractNode {
     private static State initialState;
-    private static State finalState;
     private static Set<String> blocks;
 
     private List<Action> actions = new LinkedList<>();
@@ -18,8 +17,7 @@ public class StripsNode extends AbstractNode {
     
 
     public StripsNode(StripsNode father, List<Action> actions, State currentState) {
-        if(father!=null)
-            this.setFather(father);
+        super(father);
         this.actions = actions;
         this.currentState = currentState;
     }
@@ -31,7 +29,9 @@ public class StripsNode extends AbstractNode {
 
     @Override
     public void computeEur() {
-        // TODO Auto-generated method stub
+        this.cost=depth;
+        int match = (int) currentState.getFluents().stream().map(x->(initialState.getFluents().contains(x))).count();
+        this.cost+=StripsNode.initialState.getFluents().size()-match;
         
     }
 
@@ -54,7 +54,6 @@ public class StripsNode extends AbstractNode {
 
     public static void setStates(State initialState, State finalState, Set<String> blocks) {
         StripsNode.initialState = initialState;
-        StripsNode.finalState = finalState;
         StripsNode.blocks = blocks;
     
         

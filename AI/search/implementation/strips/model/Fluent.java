@@ -1,4 +1,4 @@
-package search.strips.model;
+package search.implementation.strips.model;
 
 import java.util.List;
 

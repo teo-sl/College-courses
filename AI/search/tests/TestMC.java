@@ -2,9 +2,6 @@ package search.tests;
 
 import java.util.List;
 
-import search.algorithms.BestFirst;
-import search.algorithms.BreadthFirst;
-import search.algorithms.DepthFirst;
 import search.algorithms.IterativeDeepening;
 import search.implementation.Cannibals;
 import search.interfaces.Node;

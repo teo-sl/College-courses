@@ -1,11 +1,7 @@
 package search.algorithms;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import search.interfaces.Node;
 import search.interfaces.Solver;
 
