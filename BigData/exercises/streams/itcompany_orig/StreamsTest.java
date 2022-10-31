@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class StreamsTest {
     public static void main(String[] args) {
@@ -43,8 +43,13 @@ public class StreamsTest {
 
         System.out.println("\n 4) Person with max salary \n");
 
-        String maxPerson = cps.stream().max((a,b)->a.getSalary()-b.getSalary()).map(x->x.getName()+" "+x.getSurname()).get();
-        System.out.println(maxPerson);
+        long start = System.currentTimeMillis();
+        Optional<String> maxPerson = cps.stream().max((a,b)->a.getSalary()-b.getSalary()).map(x->x.getName()+" "+x.getSurname()+" with salary "+x.getSalary());
+        if(maxPerson.isPresent())
+            System.out.println(maxPerson.get());
+
+        long end = System.currentTimeMillis();
+        System.out.println("execution time: "+(end-start));
 
 
         // 5) Somma stipendi per dipartimento
@@ -59,34 +64,47 @@ public class StreamsTest {
 
         System.out.println("\n 6) Per ogni skill dire quanti dipendenti sono presenti nell’azienda che possiedono tale skill. \n");
 
-        cps.stream().map(x->x.getSkills().stream().map(y->List.of(x.getId()+"",y)).collect(Collectors.toList()))
-                    .flatMap(x->x.stream())
-                    .collect(Collectors.toMap(x->x.get(1),x->1,(a,b)->a+b))
-                    .forEach((a,b)->System.out.println(a+" "+b));
+        cps.stream().map(x->x.getSkills()).flatMap(x->x.stream())
+                    .collect(Collectors.toMap(x->x,x->1,(a,b)->a+b))
+                    .forEach((x,y)->System.out.println(x+" "+y));
 
         // 7) Per ogni dipartimento restituire la lista dei dipendenti (ID) che lavora in quel dipartimento.
 
         System.out.println("\n 7) Per ogni dipartimento restituire la lista dei dipendenti (ID) che lavora in quel dipartimento. \n");
 
-        cps.stream().collect(Collectors.toMap(
-            x->x.getDepartment(), x->List.of(x.getId()),
-            (x,y)->Stream.of(x,y)
-                .flatMap(xx->xx.stream())
-                .collect(Collectors.toList())))
-            .forEach((x,y)->System.out.println(x+" : "+y));
+        cps.stream().limit(100)
+            .collect(Collectors.toMap(
+                x->x.getDepartment(), x->List.of(x.getId()),
+                (x,y)->mergeLists(x,y)))
+        .forEach((x,y)->System.out.println(x+" : "+y));
 
         // 8) Per ogni skill dire quali dipendenti (ID) possiedono tale skill.
 
         System.out.println("\n 8) Per ogni skill dire quali dipendenti (ID) possiedono tale skill. \n");
 
-        cps.stream().map(x->x.getSkills().stream()
+        cps.stream().limit(100).map(x->x.getSkills().stream()
+                .map(y->new Coppie<Integer,String>(x.getId(), y))
+                .collect(Collectors.toList()))
+            .flatMap(x->x.stream())
+            .collect(Collectors.toMap(x->x.getSecondValue(), x->List.of(x.getFirtValue()),
+                (x,y)->mergeLists(x, y)))
+            .forEach((x,y)->System.out.println(x+" : "+y));
+
+        // new version of the previous query
+
+        System.out.println("\n check if equals to previous \n");
+
+        cps.stream().limit(100).map(x->x.getSkills().stream()
                 .map(y->List.of(x.getId()+"",y))
                 .collect(Collectors.toList()))
             .flatMap(x->x.stream())
             .collect(Collectors.toMap(x->x.get(1), x->List.of(x.get(0)),
-                (x,y)->Stream.of(x,y)
-                    .flatMap(xx->xx.stream())
-                    .collect(Collectors.toList())))
+                (x,y)->{
+                    List<String> ret = new ArrayList<>();
+                    ret.addAll(x);
+                    ret.addAll(y);
+                    return ret;
+                }))
             .forEach((x,y)->System.out.println(x+" : "+y));
 
 
@@ -103,6 +121,7 @@ public class StreamsTest {
 
         System.out.println("\n 10) primi 100 raggruppati per dipartimento e ordinare per i dipartimenti con più dipendenti \n");
 
+
         cps.stream().sorted((a,b)->b.getSalary()-a.getSalary()).limit(100)
             .collect(Collectors.toMap(x->x.getDepartment(), x->1,
             (x,y)->x+1))
@@ -112,10 +131,42 @@ public class StreamsTest {
 	            (oldValue, newValue) -> oldValue, LinkedHashMap::new))
                 
                 .forEach((x,y)->System.out.println(x+" "+y));
-            
-                
 
         
-        
+        System.out.println("check if equals to last query");
+
+
+        cps.stream().sorted((a,b)->b.getSalary()-a.getSalary()).limit(100)
+                .collect(Collectors.toMap(x->x.getDepartment(), x->1,
+                (x,y)->x+1))
+                .entrySet().stream()
+                .sorted((x,y)->y.getValue()-x.getValue())
+                .forEach(x->System.out.println(x.getKey()+" "+x.getValue()));
+
     }
+
+    public static List<Integer> mergeLists(List<Integer> a, List<Integer> b) {
+        List<Integer> ret = new ArrayList<>();
+        ret.addAll(a); ret.addAll(b);
+        return ret;
+    }
+
+
+    
+}
+
+class Coppie<T,V> {
+    private T firtValue;
+    private V secondValue;
+    public Coppie(T firtValue, V secondValue) {
+        this.firtValue = firtValue;
+        this.secondValue = secondValue;
+    }
+    public T getFirtValue() {
+        return firtValue;
+    }
+    public V getSecondValue() {
+        return secondValue;
+    }
+    
 }

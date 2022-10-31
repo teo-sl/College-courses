@@ -26,9 +26,6 @@ public class TestDM {
 
         double max = cps.stream().max((a,b)->a.getSalary()-b.getSalary()).map(x->x.getSalary()).get();
         System.out.println(max);
-        List<Double> res = cps.stream().sorted((a,b)->b.getSalary()-a.getSalary()).map(x->x.getSalary()/max)
-                .toList();
-
         Set<String> skills = cps.stream().map(x->x.getSkills()).flatMap(x->x.stream())
                     .collect(Collectors.toSet());
 
