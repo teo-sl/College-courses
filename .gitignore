@@ -3,5 +3,6 @@ BigData/exercises/streams/itcompany_orig/ITCompany_10000.txt
 BigData/exercises/streams/itcompany_orig/res2.csv
 BigData/exercises/streams/itcompany_orig/res.csv
 BigData/exercises/streams/itcompany_orig/ITCompany_10000.csv
-.gitignore
 BigData/exercises/streams/itcompany_orig/redo.csv
+redo.csv
+
