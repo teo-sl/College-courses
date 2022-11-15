@@ -12,39 +12,58 @@
 )
 
 
-(defun insert-heap-0(L X H BS)
+(defun insert-heap-0(L X BS)
+    
     (cond
         ((not BS) 
-            (list (max X H) () () )
+            (list X () () )
         )
         (( = (car BS) 0)
-            (setq son (insert-heap-0 (cadr L) X (car L) (cdr BS)))
-            (cond
-                ((= (car son) X) (setq V (car L)))
-                ((not (numberp H) ) (setq V (car L)))
-                (t (setq V (max H X)))
-            )
+            (setq son (insert-heap-0 (cadr L) X (cdr BS)))
             (list 
-                V
+                (car L)
                 son
                 (caddr L)
             )
         )
         ((= (car BS) 1)
-
-            (setq son (insert-heap-0 (caddr L) X (car L) (cdr BS)))
-            
-            (cond
-                ((= (car son) X) (setq V (car L)))
-                ((not (numberp H) ) (setq V (car L)))
-                (t (setq V (max H X)))
-            )
+            (setq son (insert-heap-0 (caddr L) X (cdr BS)))
             (list 
-                V
+                (car L)
                 (cadr L)
                 son
             )
-        
+        )
+    )
+)
+
+(defun fix-heap (L BS)
+    (cond
+        ( (not BS) L)
+        ( (= (car BS) 0) 
+            (setq son (fix-heap (cadr L) (cdr BS) ))
+            
+            (list
+                (min (car L) (car son))
+                (list
+                    (max (car L) (car son))
+                    (cadr son)
+                    (caddr son)
+                )
+                (caddr L)
+            )
+        )
+        ( ( = (car BS) 1)
+            (setq son (fix-heap (caddr L) (cdr BS) ))
+            (list
+                (min (car L) (car son))
+                (cadr L)
+                (list
+                    (max (car L) (car son))
+                    (cadr son)
+                    (caddr son)
+                )
+            )
         )
     )
 )
@@ -55,7 +74,7 @@
     (cond 
         ((= S 0) (list X () ()))
         (t
-            (insert-heap-0 L X () (binary-list (+ S 1)))
+            (fix-heap (insert-heap-0 L X (binary-list (+ S 1))) (binary-list (+ S 1)))
         )
     )
 )
@@ -63,19 +82,29 @@
 
 
 
-(setq l (insert-heap () 1 0 ))
 
 
-(setq ll 
-    (insert-heap
-        '( 3 ( 5 ( 8 () () ) ( 10 () () ) ) ( 4 ( 11 () () ) () ) ) 9 6
+(defun feed-heap (L VS H HS)
+    (cond
+        ((= VS 0)
+            H
+        )
+        (t
+            (feed-heap 
+                (cdr L)
+                (- VS 1)
+                (insert-heap H (car L) HS)
+                (+ HS 1)
+            )
+        )
     )
 )
 
-(print
-    (insert-heap
-        ll 4 7
-    )
+(defun heap_sort (L)
+    (feed-heap L (length L) () 0 )
 )
+
+
+
 
 
