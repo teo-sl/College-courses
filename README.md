@@ -11,6 +11,7 @@ This part includes:
   -  block planning (strips like solution)
 - some notes related to game theory
 - the "no goal" exercise
+- some exercises done in lisp (e.g. heap sort implementation)
 
 ## Big data
 
@@ -21,7 +22,8 @@ Exercises related to:
 
 ## Machine Learning
 The implementation of some ML models like:
-- adaboost
+- adaboost (with Viola Jones algorithm)
 - decision stump
 - linear regression
 - the perceptron
+- SVM
