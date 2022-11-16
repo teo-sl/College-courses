@@ -11,7 +11,6 @@
    )
 )
 
-
 (defun insert-heap-0 (L X BS)
     
     (cond
@@ -211,12 +210,66 @@
 
 )
 
+(defun fix-heap-down (H son_value)
+    
+    (cond
+        (; caso nodo vuoto
+            (not H) '()
+        )
+
+        (;caso nodo foglia
+            (and (not (cadr H)) 
+              (not (caddr H))
+            )
+            (list son_value () ())
+        )
+        (;caso figlio sinistro
+            (or (not (caddr H)) 
+                (and (cadr H) (caddr H) (< (caadr H) (caaddr H)))
+            )
+
+            (setq my_value (min son_value (caadr H)))
+            (cond 
+                ((= my_value son_value)
+                    (setq son_son_value (caadr H))
+                )
+                ((= my_value (caadr H))
+                    (setq son_son_value son_value)
+                )
+            )
+            (list
+                my_value
+                (fix-heap-down (cadr H) son_son_value)
+                (caddr H)
+            )
+        )
+        (;cado figlio destro
+            (or (not (cadr H)) 
+                (and (cadr H) (caddr H) (< (caaddr H) (caadr H)))
+            )
+
+            (setq my_value (min son_value (caaddr H)))
+            (cond 
+                ((= my_value son_value)
+                    (setq son_son_value (caaddr H))
+                )
+                ((= my_value (caaddr H))
+                    (setq son_son_value son_value)
+                )
+            )
+            (list
+                my_value
+                (cadr H)
+                (fix-heap-down (caddr H) son_son_value)
+            )
+        )
+    )
+)
+
 
 (defun delete-root (H SH)
     (setq BL (binary-list SH))
     (setq new_root (get-nth H BL))
-    (print (set-root (delete-nth H BL) new_root))
-    (print new_root)
     (fix-heap-down 
         (set-root (delete-nth H BL) new_root)
         new_root
@@ -246,18 +299,14 @@
 
 (defun heap_sort (L)
     (setq full_heap (feed-heap L (length L) () 0 ))
-    (print full_heap)
+    
     (empty-heap full_heap (length L))
 )
 
 
-(setq h (heap_sort '(5 1 3 9 4 12 78 32 0 21 43)))
-;(setq h '( 4 ( 9 () () ) (5 () ())))
+(setq h (heap_sort '(5 1 3 9 4 12 78 32 0 21 43 -1 45 10 )))
+(print h)
 
-
-;(print (delete-root h 3))
-
-;(delete-root h 3)
 
 
 
