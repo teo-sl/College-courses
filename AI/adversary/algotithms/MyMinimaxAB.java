@@ -8,11 +8,14 @@ public class MyMinimaxAB {
     private Color player;
     private Move bestMove = null;
 
-    public Move getBestMove() {
+    public Move getBestMove(Board board, int depth, boolean maximizer, Color player) {
+        this.player=player;
+        double v = minimax(board, depth, Double.MIN_VALUE, Double.MAX_VALUE, maximizer);
+        System.out.println("mini"+v);
         return bestMove;
     }
 
-    double minimax(Board board, int depth,double alpha, double beta, boolean maximizer) {
+    private double minimax(Board board, int depth,double alpha, double beta, boolean maximizer) {
         if(depth==0 || board.isTerminal()) 
             return board.evaluateBoard(player);
         double eval,minEval,maxEval;

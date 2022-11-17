@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
+import adversary.algotithms.MyMinimaxAB;
 import adversary.enumerations.Color;
 import adversary.interfaces.Board;
 import adversary.interfaces.Move;
@@ -73,6 +74,13 @@ public class BoardTicTacToe implements Board {
         lastMovePlayer=tm.getPlayer();
         board[i][j]=lastMovePlayer;
     }
+    private int manage2InRow(double cB, double cW, Color self) {
+        if(cB==2 && self == Color.BLACK) return 1;
+        if(cB==2 && self == Color.WHITE) return -1;
+
+        if(cW==2 && self == Color.WHITE) return 1;
+        return -1;
+    }
 
     @Override
     public void revert(Move m) {
@@ -111,6 +119,7 @@ public class BoardTicTacToe implements Board {
                 if(board[i][j]==Color.BLACK) counter_B++;
                 else if(board[i][j]==Color.WHITE) counter_W++;
                 else counter_N++;
+            if(counter_B==2 || counter_W==2) return manage2InRow(counter_B,counter_N,self);
             decodeCounters = decodeCounters(counter_B,counter_W);
             B+=decodeCounters[0];
             W+=decodeCounters[1];
@@ -123,6 +132,7 @@ public class BoardTicTacToe implements Board {
             for(int i=0;i<3;++i)
                 if(board[i][j]==Color.BLACK) counter_B++;
                 else if(board[i][j]==Color.WHITE) counter_W++;
+            if(counter_B==2 || counter_W==2) return manage2InRow(counter_B,counter_N,self);
             decodeCounters = decodeCounters(counter_B,counter_W);
             B+=decodeCounters[0];
             W+=decodeCounters[1];
@@ -134,6 +144,8 @@ public class BoardTicTacToe implements Board {
         for(int i=0;i<3;++i)
             if(board[i][i]==Color.BLACK) counter_B++;
             else if(board[i][i]==Color.WHITE) counter_W++;
+
+        if(counter_B==2 || counter_W==2) return manage2InRow(counter_B,counter_N,self);
         decodeCounters = decodeCounters(counter_B,counter_W);
 
         B+=decodeCounters[0];
@@ -145,6 +157,7 @@ public class BoardTicTacToe implements Board {
             if(board[i][j]==Color.BLACK) counter_B++;
             else if(board[i][j]==Color.WHITE) counter_W++;
 
+        if(counter_B==2 || counter_W==2) return manage2InRow(counter_B,counter_N,self);
         decodeCounters = decodeCounters(counter_B,counter_W);
 
         B+=decodeCounters[0];
@@ -200,6 +213,7 @@ public class BoardTicTacToe implements Board {
         Color nextCur = Color.WHITE;
         String player="";
         Color self = Color.BLACK;
+        MyMinimaxAB ai = new MyMinimaxAB();
         //AlphaBeta artificialPlayer = new AlphaBeta();
         Move move;
         while(!board.isTerminal()) {
@@ -222,6 +236,11 @@ public class BoardTicTacToe implements Board {
             else {
             */
                 System.out.println("PLayer"+player+" make your move");
+                if(cur==Color.WHITE) {
+                    Move m =  ai.getBestMove(board, 20, true, Color.WHITE);
+                    System.out.println("ai suggested move => "+m);
+
+                }
                 int i = sc.nextInt();
                 int j = sc.nextInt();
                 move = new TicTacMove(i, j, cur);

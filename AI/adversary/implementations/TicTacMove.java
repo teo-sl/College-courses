@@ -46,6 +46,14 @@ public class TicTacMove implements Move {
             return false;
         return true;
     }
+    @Override
+    public Color getPlayer(Color c) {
+        return player;
+    }
+
+    public String toString() {
+        return "i : "+coordinates[0]+", j : "+coordinates[1]+", player : "+player;
+    }
 
     
     
