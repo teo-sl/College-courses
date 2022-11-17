@@ -1,6 +1,6 @@
 package adversary.enumerations;
 
 public enum Color {
-    BLACK,WHITE;
+    BLACK,WHITE,NONE;
     
 }

@@ -6,9 +6,10 @@ import adversary.enumerations.Color;
 
 public interface Board {
     boolean isTerminal();
-    List<Move> getPossibleMoves(Color current);
+
+    List<Move> getPossibleMoves();
     void apply(Move m);
     void revert(Move m);
-    double evaluateBoard(Color current, Color self);
+    double evaluateBoard(Color self);
 
 }
