@@ -1,4 +1,4 @@
-package project.interfaces;
+package projectTicTacToe.interfaces;
 
 import java.util.List;
 

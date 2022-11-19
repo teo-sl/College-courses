@@ -1,11 +1,11 @@
-package project.algorithm;
+package projectTicTacToe.algorithm;
 
 import java.util.List;
 
-import project.interfaces.Board;
-import project.interfaces.MinimaxResult;
-import project.interfaces.Move;
-import project.interfaces.Player;
+import projectTicTacToe.interfaces.Board;
+import projectTicTacToe.interfaces.MinimaxResult;
+import projectTicTacToe.interfaces.Move;
+import projectTicTacToe.interfaces.Player;
 
 public class MinimaxAB {
     

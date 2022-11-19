@@ -1,4 +1,5 @@
-package project.interfaces;
+package projectForza4.interfaces;
+
 
 public class MinimaxResult {
 

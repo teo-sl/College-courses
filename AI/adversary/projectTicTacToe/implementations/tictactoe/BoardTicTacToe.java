@@ -1,13 +1,13 @@
-package project.implementations.tictactoe;
+package projectTicTacToe.implementations.tictactoe;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import project.interfaces.Board;
-import project.interfaces.Move;
-import project.interfaces.Player;
-import project.algorithm.*;
-import project.implementations.TicTacToeMove;;
+import projectTicTacToe.algorithm.*;
+import projectTicTacToe.implementations.TicTacToeMove;
+import projectTicTacToe.interfaces.Board;
+import projectTicTacToe.interfaces.Move;
+import projectTicTacToe.interfaces.Player;;
 
 public class BoardTicTacToe implements Board {
     private Player[][] board = new Player[3][3];

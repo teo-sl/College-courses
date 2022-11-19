@@ -1,11 +1,11 @@
-package project.tests;
+package projectTicTacToe.tests;
 
 import java.util.Scanner;
 
-import project.algorithm.MinimaxAB;
-import project.implementations.TicTacToeMove;
-import project.implementations.tictactoe.BoardTicTacToe;
-import project.interfaces.Player;
+import projectTicTacToe.algorithm.MinimaxAB;
+import projectTicTacToe.implementations.TicTacToeMove;
+import projectTicTacToe.implementations.tictactoe.BoardTicTacToe;
+import projectTicTacToe.interfaces.Player;
 
 public class TicTacToeTest {
     public static void main(String[] args) {

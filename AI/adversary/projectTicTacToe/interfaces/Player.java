@@ -1,4 +1,4 @@
-package project.interfaces;
+package projectTicTacToe.interfaces;
 
 public enum Player {
     HUMAN,AI;

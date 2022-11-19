@@ -1,7 +1,7 @@
-package project.implementations;
+package projectTicTacToe.implementations;
 
-import project.interfaces.Move;
-import project.interfaces.Player;
+import projectTicTacToe.interfaces.Move;
+import projectTicTacToe.interfaces.Player;
 
 public class TicTacToeMove implements Move {
     private int i,j;
