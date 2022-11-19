@@ -9,6 +9,9 @@ This part includes:
   -  Cannibal and missionaries
   -  8 puzzle
   -  block planning (strips like solution)
+- a series of projects for adversarial search using Minimax algorithm with alpha beta pruning:
+  - connect four
+  - tic tac toe
 - some notes related to game theory
 - the "no goal" exercise
 - some exercises done in lisp (e.g. heap sort implementation)
