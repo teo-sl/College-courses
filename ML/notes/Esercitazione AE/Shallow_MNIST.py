@@ -98,3 +98,5 @@ proj = encoder.predict(X_train)
 plt.figure(4)
 plt.scatter(proj[:,0],proj[:,1],c=y_train, cmap='jet_r')
 plt.title('Latent Space')
+
+plt.show()

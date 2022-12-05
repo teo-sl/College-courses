@@ -1,3 +1,8 @@
+# in questo esempio, una rete neurale viene utilizzata per riconoscere
+# anomalie. La rete è allenata fornendo come input e output lo stesso 
+# elemento x. La rete impara quindi a riconoscere i dati normali. 
+# Una volta ricevuto in ingresso un'anomalia, questa produrrà un output
+# con un forte errore, non riconoscendo l'anomalia.
 import sys
 sys.path.extend(['/home/luca/Scrivania/PyDir/CNN'])
 from tensorflow.keras.models import Sequential
@@ -60,3 +65,5 @@ plt.figure(2)
 plt.plot(fpr,tpr)
 plt.plot([0, 1], [0, 1], linestyle='--')
 plt.title('AUC = '+str(auc))
+
+plt.show()

@@ -116,5 +116,6 @@ plt.figure()
 plt.plot(fpr_SVM,tpr_SVM)
 plt.plot([0, 1], [0, 1], linestyle='--')
 plt.title('1class-SVM AUC = '+str(auc_SVM))
+plt.show()
 
 

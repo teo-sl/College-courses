@@ -69,3 +69,5 @@ X_PCA = pca.fit_transform(X_train)
 plt.figure(2)
 plt.scatter(X_PCA[:,0],X_PCA[:,1],c=y_train, cmap='jet_r')
 plt.title('PCA')
+
+plt.show()

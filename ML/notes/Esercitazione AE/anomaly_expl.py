@@ -1,5 +1,13 @@
+# Questo file permette di visualizzare come le anomalie vengano
+# gestite da un autoencoder. Una volta che l'autoencoder è stato
+# addestrato, vengono mandate in input delle anomalie e si
+# osserva come l'autoencoder le riconosca come anomalie, o comunque
+# come la ricostruzione presenti delle problematiche. L'heatmap,
+# ottenuto come differenza tra le immagini originali e le ricostruite,
+# mette in evidenza proprio questo aspetto
+
 import sys
-sys.path.extend(['/home/luca/Scrivania/PyDir/CNN'])
+sys.path.extend(['/Users/teodorosullazzo/Documents/git_repos/College-courses'])
 import tensorflow.keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -11,6 +19,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from sklearn.metrics import roc_curve,roc_auc_score
 
 
+# LOAD DATASET
 (x_train, y_train), (x_test, y_test) = tensorflow.keras.datasets.mnist.load_data()
 x_train = x_train.astype('float32') / 255.
 x_test = x_test.astype('float32') / 255.
@@ -84,3 +93,5 @@ for i in range(9):
     plt.imshow(np.abs(x_t[i]-x_t_rec[i]),cmap='gray')
 plt.suptitle('Heatmaps')
 
+
+plt.show()

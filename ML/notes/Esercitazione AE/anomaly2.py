@@ -58,3 +58,5 @@ plt.figure(2)
 plt.plot(fpr,tpr)
 plt.plot([0, 1], [0, 1], linestyle='--')
 plt.title('AUC = '+str(auc))
+
+plt.show()

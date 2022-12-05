@@ -1,3 +1,8 @@
+# in questo file è presente il codice per la denoising dell'immagine.
+# L'autoencoder riceve in ingresso le immagini rumorose e usa come
+# target le immagini originali. In tal modo, la rete impara a rimuovere
+# il rumore dalle immagini. Per valutare le prestazioni del modello,
+# si esegue il predict sul test set noisy.
 import sys
 sys.path.extend(['/home/luca/Scrivania/PyDir/CNN'])
 import tensorflow.keras
@@ -123,3 +128,5 @@ for i in range(9):
     plt.subplot(330 + 1 + i)
     plt.imshow(x_new[i][:,:,0], cmap=plt.get_cmap('gray'))
 plt.suptitle('Denoising AE')
+
+plt.show()
