@@ -1,0 +1,44 @@
+• Utente(Codice, Nome, Cognome, Città)
+• Partita(Codice, Organizzatore, Tipo, Luogo, Data)
+• Iscrizione(Utente, Partita, DataIscrizione, Ruolo)
+
+1. Nome e cognome degli utenti che hanno organizzato almeno due partite di “calcio a 5” presso la struttura sportiva in “Via Verdi 15”.
+2. Le partite a cui hanno partecipato solo utenti provenienti dalla stessa città.
+3. Le coppie di utenti che hanno giocato sempre insieme nelle partite di “calcio a 8”.
+4. Per ogni utente U, il numero di partite che U ha organizzato a cui hanno partecipato solo utenti della
+sua città (si supponga di disporre di un opportuno operatore di confronto “<” fra codice di partite).
+5. Per ogni utente U e ogni ruolo R, il numero di partite disputate dall’utente U con ruolo R.
+
+---------------------
+
+q1(N,C) :- partita(C1,U,5,via,_),partita(C2,U,5,via,_),C1!=C2,utente(U,N,C,_).
+
+---------------------
+
+partiteNo(P) :- iscrizione(U1,P,_,_), iscrizione(U2,P,_,_), utente(U1,_,_,C1),utente(U2,_,_,C2), C1!=C2.
+q2(P) :- partita(P,_,_,_,_), not partiteNo(P).
+
+---------------------
+
+partiteGiocate(U,P) :- iscrizione(U,P,_,_), partita(P,_,8,_,_).
+utentiNo(U1,U2) :- iscrizione(U1,P1,_,_), iscrizione(U2,P2,_,_), not partiteGiocate(U1,P2), U1!=U2, P1!=P2,partita(P1,_,8,_,_),partita(P2,_,8,_,_).
+q3(U1,U2) :- utente(U1,_,_,_), utente(U2,_,_,_), not utentiNo(U1,U2), not utentiNo(U2,U1).
+
+---------------------
+
+partiteNo(P,CT) :- iscrizione(U,P,_,_), utente(U,_,_,CT1), CT1!=CT.
+partiteSi(U,P) :- utente(U,_,_,CT),  not partiteNo(P,CT).
+
+nonPrimo(U,P) :- partiteSi(U,P), partiteSi(U,P1), P1<P.
+nonSucc(U,P1,P2) :- partiteSi(U,P1), partiteSi(U,P2), partiteSi(U,P3), P1<P3, P3<P2.
+
+conta(U,P,1) :- partiteSi(U,P), not nonPrimo(U,P).
+conta(U,P,N+1) :- conta(U,P2,N), partiteSi(U,P), P>P2, not nonSucc(U,P,P2).
+
+nonMaggiore(U,N) :- conta(U,_,N), conta(U,_,M), N<M.
+q(U,N) : - conta(U,_,N), not nonMaggiore(U,N).
+
+---------------------
+
+utenteRuoloPartita(U,R,P) :- iscrizione(U,P,_,R).
+
