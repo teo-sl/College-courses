@@ -1,0 +1,47 @@
+Si consideri il seguente schema Relazionale:
+• Utente(Codice, Nome, Cognome, Città)
+• Partita(Codice, Squadra1, Squadra2, Data, Esito)
+• Scommessa(Codice, Utente, Importo, Data)
+• PartiteScommesse(CodPartita, CodScommessa, EsitoScommesso)
+per la gestione di scommesse sportive. In particolare, un Utente può Scommettere sull'esito di una o più Partite. L'Esito di una partita può avere uno dei seguenti valori:
+• 1 se Squadra1 vince la partita;
+• 2 se Squadra2 vince la partita;
+• X in caso di pareggio.
+Una Scommessa è identificata da un codice ed è effettuata da un utente, specificando l'importo della scommessa e la data. Per ogni PartitaScommessa, viene specificato il codice della partita, il codice della scommessa in cui appare la partita e l'esito predetto dall'utente.
+Si scrivano in Datalog con aritmetica le seguenti query:
+1. Gli utenti che hanno vinto esattamente due scommesse. Una scommessa è definita vinta, se per ogni partita presente nella scommessa, l'esito predetto coincide con l'esito reale.
+2. Per ogni utente U, le squadre “preferite” di U. Una squadra S è preferita dall'utente U, se S viene giocata vincente in ogni scommessa effettuata da U.
+3. Le coppie di utenti U1,U2 che hanno le stesse squadre preferite.
+4. Per ogni utente U e ogni scommessa S effettuata da U, il numero di partite giocate in S da U.
+5. Per ogni scommessa S, la vincita in denaro di S. La vincita in denaro di una scommessa S è pari a 0
+se S non è vincente, altrimenti è pari al prodotto tra l'Importo e il numero di partite giocate nella scommessa S.
+Inoltre, si definiscano l'interrogazione 1 in Algebra Relazionale e l'interrogazione 5 in SQL.
+
+nonVinte(CS):- partiteScommesse(P,CS,ES),partita(P,_,_,_,ER),ES!=ER.
+vinte(U,S) :- scommessa(S,U,_,_), not nonVinte(S).
+
+vinteAlmeno3(U) :- vinte(U,S1),vinte(U,S2),vinte(U,S3),S1!=S2,S1!=S3,S2!=S3.
+
+q1(U) :- vinte(U,S), not vinteAlmeno3(U).
+
+
+--------
+
+nonPreferite(U,SQ) :- scommessa(CS,U,_,_),partiteScommesse(P,CS,E),partita(P,SQ,_,_),E==2.
+nonPreferite(U,SQ) :- scommessa(CS,U,_,_),partiteScommesse(P,CS,E),partita(P,_,SQ,_),E==1.
+
+preferite(U,SQ) :- not nonPreferite(U,SQ), utente(U,_,_,_),partita(_,SQ,_,_).
+preferite(U,SQ) :- not nonPreferite(U,SQ), utente(U,_,_,_),partita(_,_,SQ,_).
+
+---------
+
+diverseSquadrePreferite(U1,U2) :- preferite(U1,SQ1), not preferite(U2,SQ1), utente(U2,_,_,_).
+diverseSquadrePreferite(U1,U2) :- preferite(U2,SQ2), not preferite(U1,SQ2), utente(U1,_,_,_).
+
+stesseSquadrePreferite(U1,U2) :- not diverseSquadrePreferite(U1,U2), utente(U1,_,_,_),utente(U2,_,_,_).
+
+---------
+
+
+
+

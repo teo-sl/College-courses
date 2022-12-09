@@ -1,0 +1,34 @@
+
+Si consideri il seguente schema Relazionale:
+• Fornitore(Codice,Nome,Sede)
+• Prodotto(Cod,Nome,Marca)
+• Fornitura(Codice,Fornitore,Prodotto,Quantità,Data)
+
+
+per la gestione di un magazzino merci. In particolare, un Fornitore effettua Forniture di uno o più più Prodotti presso il magazzino.
+Si scrivano in Datalog con aritmetica le seguenti query:
+1. I fornitori che hanno fornito almeno due prodotti diversi.
+2. I prodotti che vengono forniti solo da fornitori con sede italiana.
+3. I fornitori che hanno fornito gli stessi prodotti.
+4. Per ogni fornitore, il totale di prodotti forniti (si supponga di disporre di un opportuno operatore di
+confronto “<” fra i codici dei prodotti).
+5. Per ogni prodotto, il numero di fornitori che lo forniscono (si supponga di disporre di un opportuno
+operatore di confronto “<” fra i codici dei fornitori).
+Inoltre, si definiscano l'interrogazione 1 in Algebra Relazionale e l'interrogazione 5 in SQL.
+
+
+q1(F) :- fornitura(_,F,P1,_,_), fornitura(_,F,P2,_,_), P1!=P2.
+fornisceNonItaliano(P) :- fornitura(_,F,P,_,_), fornitore(F,_,S), S!=Italia.
+q2(P) :- prodotto(P,_,_), not fornisceNonItaliano(P).
+
+
+
+
+forniti(F,P) :- fornitura(_,F,P,_,_).
+prodottiFornitiDiversi(F1,F2) :- fornitura(_,F1,P,_,_), not forniti(F2,P).
+prodottiFornitiDiversi(F1,F2) :- fornitura(_,F2,P,_,_), not forniti(F1,P). 
+
+q3(F1,F2) :- fornitori(F1), fornitori(F2), F1!=F2, not prodottiFornitiDiversi(F1,F2).
+
+
+
