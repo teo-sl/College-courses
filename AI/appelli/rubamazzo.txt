@@ -1,0 +1,54 @@
+Ciao a tutti ragazzi
+
+Questo è il sito prescelto SIUUUU
+
+
+if carte_rimaste == 0:
+   if mio_mazzo.size == mazzo_avversario.size:
+       return DRAW
+    else if mio_mazzo.size > mazzo_avversario.size:
+        return WIN
+    else:
+        return LOSE
+    
+h_num = mie_carte - carte_avversario
+h_steal = 0
+carta_M_AVV
+carta_M_IO
+    
+if mie_carte.find(carta_M_AVV).size>carte_avv.find(carta_M_AVV).size:
+    h_steal += mazzo_avversario.size
+else:
+    h_steal -= mazzo_mio.size
+    
+if mie_carte.find(carta_M_AVV).size>=carte_avv.find(carta_M_AVV).size:
+    h_steal+=0
+else:
+    h_steal-=mazzo_mio.size
+    
+h_table = // carte che siamo in grado di prendere sul tavolo viste le carte
+                    attuali nel nostro mazzo
+    
+return w1*h_num + w2*h_steal + w3*h_table
+
+
+Descrizione
+
+L'euristica è composta da tre componenti, una parte che tiene in considerazione il numero di carte presenti nel mazzo sia nostro che dell'avversario. Questa parte spinge il giocatore ad accumulare quante carte possibili ai fini di ottenere al termine del gioco un monte punti maggior.
+
+La secondo componente va a prendere in considerazione l'effetto delle mosse di "rapina". Il giocatore attaccherà il mazzo avversario solo se in una situazione di vantaggio, nel senso che è in grado di controattaccare se l'avversario riprende il mazzo. Inoltre, se è l'avversario ad attaccare, se mi posso difender la situazione è valutata positvamente, altrimenti il giocatore sarà spinto a prende un'altra carta sul tavolo per cambiare quella sul proprio mazzo.
+
+Infine, la terza componente valuta le possibilità di guadagno in riferimento al tavolo, questa componente diviene molto rilevante soprattutto nelle fasi finali del gioco.
+
+
+------------------------------------------------------
+
+
+L'algoritmo di ricerca utilizzato è MinMax. L'algoritmo è leggermente modficato dall'originale. Poiché il gioco è a informazione incompleta non si potrebbe applicare  direttamente, per tale motivo eseguiamo il seguente algoritmo.
+
+def algoritmo():
+    prendiamo le d distribuzioni di cart più probabili (in base alle carte rimanenti nel mazzo, e.g. se ci sono ancora 4 re, molto probabilmente tra le prime carte estratte, o tra quelle dell'avversario vi sarà un re)
+    
+    per ogni distribuzione applichiamo minmax e prendiamo la valutazione sui figli del nodo radice
+    Alla fine avremo una matrice, dove, per ogni distribuzione di carte abbiamo le valutazioni sui figli. Prendiamo la media tra tutte le valutazioni e prendiamo il figlio (i.e. la mossa) che ci permette di ottenere il valore migliore.
+    

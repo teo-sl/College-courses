@@ -1,0 +1,96 @@
+EURISTICA
+
+# per il massimizzatore va usata questa euristica
+def eval_state_single(game):
+    se il mio punteggio è 30
+        return WIN
+    se il mio punteggio è > 30
+        return LOSE
+
+    h_num = (mio punteggio - punteggio avversario_1) + (mio punteggio - punteggio avversario_2)
+    oppure 
+    h_num = (mio punteggio - punteggio avversario con punteggio massimo)
+    h_block = numero di carte che farebbero superare 30 diviso il numero di carte totali
+
+    // i pesi w1 e w2 andrebbero calibrati tramite prove pratiche
+    return w1 * h_num - w2 * h_block 
+
+
+# per il minimazzatore va usata questa euristica
+def eval_state_other(game):
+    return eval_state_single(game,g1)/2+eval_state_single(game,g2)/2
+
+--------------------------------------------------------------------------------
+
+STRUTTURE DATI
+
+Lo stato del gioco potrebbe essere rappresentato tramite un semplice intero per ogni giocatore, e 
+per indicare le carte rimanenti possiamo creare una lista dove per ogni carta viene indicato il suo 
+valore, in tal modo, una volta che questa viene estratta verrà eliminata dalle carte disponibili, e 
+l'aggiornamento del punteggio di un giocatore consiste in una semplice somma.
+
+
+--------------------------------------------------------------------------------
+
+ALGORITMO
+
+L'algoritmo utilizzato sarà Minimax con una piccola variante. Innanzitutto, dal momento che nel
+gioco vi sono 3 giocatori, semplifichiamo il tutto supponendo di avere una situazione del tipo io contro
+gli altri, in questo modo il minimazzatore rappresenterà due giocatori. L'euristica dovrà tenere in 
+considerazione la forza combinata di entrambi, e inoltre, una singola mossa del minimazzatore corrisponderà
+a una macro di due mosse base. 
+
+Per quanto riguarda la natura a informazione imperfetta del gioco, quel che possiamo fare è simulare 
+diverse distribuzioni di carte (i.e. supponiamo di conoscere l'ordine in cui le carte verranno estratte).
+
+L'algoritmo funzionerà in questo modo:
+
+def search:
+    n_iter = # numero di simulazioni da effettuare
+    In base allo stato corrente nel quale ci troviamo, siamo sicuri che alcune carte sono già uscite,
+    (si tratta delle carxte in nostra mano). Grazie a questa informazione, è evidente che alcune carte
+    saranno più probabilmente estratte di altre. Tra le simulazioni possibili, eseguiamole in ordine di
+    probabilità, i.e. eseguiamo dalla distribuzione più probabile a quella meno probabile
+
+    distribuzioni = # calcola le n_iter distribuzioni più probabili e inseriscile in ordine
+                        ascendente
+
+    risultati = # matrice di dimensione (n_iter() x (mosse possibili a partire dallo stato corrente)
+                # nella matrice inseriamo la valutazione che ogni simulazione darà alle mosse disponibili
+                # alla fine effettueremo la media
+    for i in [1,n_iter]:
+        esegui minimax su distribuzioni[i]
+
+    media_mosse = #esegui la media sui risultati
+
+    return >> la mossa corrispondente al valore massimo in media_mosse
+
+
+--------------------------------------------------------------------------------
+
+RIFLESSIONI
+
+Questo approccio ha delle ovvie limitazioni dovute, innanzitutto alla semplificazione fatta per poter
+usare minimax. Dall'altro lato, per gestire la natura a informazione incompleta del gioco sarebe meglio
+usare altre tecniche come la Montecarlo tree search. 
+
+La struttura di base dell'euristica permette al giocatore di riconoscere la situazione vincente (quando si arriva
+a 30 si ha vinto o si è arrivati a pari merito, è la situazione ottimale), come anche quella di perdita, 
+quando supera 30. Restituendo dei valori molto alti o molto bassi (WIN LOSE) siamo in grado di far evitare
+al giocatore delle situazioni di perdita e gli consentiamo di cercare quelle di vincita.
+
+La seconda componente dell'euristica consente invece di fare delle considerazioni sulla probabilità di 
+poter aumentare il proprio punteggio senza "sballare". Naturalmente, facendo delle simulazioni il valore
+non sarà sempre accurato, effettuando la media cerchiamo di limitare quanto possibile questo problema. 
+Per valutare questo aspetto dividiamo il numero di carte pericolose per il numero di quelle rimanenti, 
+tale valore verrà quindi sottratto al risultato finale.
+
+Un'altra componente tiene conto della differenza di punteggio tra il giocatore e gli altri. In questo modo,
+tieniamo in considerazione il fatto che nel gioco, quando nessuno dei giocatori ha raggiunto 30, vincerà quello
+col valore maggiore, quindi spingiamo i giocatori a aumentare il loro punteggio.
+
+Naturalmente, per evitare di effettuare speculazioni troppo forti, si può limitare la visita in profondità di Minmax
+andando a settare un d massimo più piccolo, aumentando, possibilmente invece, il numero di simulazioni da dover
+effettuare.
+
+Questo ultimo aspetto come anche la calibrazione dei pesi w1 e w2 andrebbero testati praticamente.

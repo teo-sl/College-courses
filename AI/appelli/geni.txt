@@ -1,0 +1,58 @@
+
+def calcola_euristica(board,player):
+    h_num = (#white - #black)/(#white+#black)
+    if player == black:
+        h_num*=-1
+
+
+    n_normal_white = 0
+    n_normal_black = 0
+    n_special_white = 0
+    n_special_black = 0
+
+
+    for (i,j) in board:
+        if (i,j) is free:
+
+            /* normal moves */
+
+
+            neighbors_white = # neighbors with the same color's position 
+                            (blank between them)
+
+            if neighbors_white.length == 0:
+                continue
+
+            dists_white = # dists between neighbors
+            n_normal_moves+= sum(dists_white)/dists_white.length
+
+            // same thing with black
+            ...
+
+
+            /* special moves */
+
+            for diagonal:
+                if same color adiacent in diagonal && another couple in same diagonal
+                    n_special_white_p+=diagonal_dimension
+            n_special_white+=n_special_white_p/n_this_time
+            
+            // same thing for black
+
+    h_ret = (n_normal_white-n_normal_black)+(n_special_white-n_special_black)
+    if player == black:
+        h_ret*=-1
+
+    return h_ret*10+h_num
+
+
+        
+
+
+
+
+
+    if n_normal_moves == 0 and n_special_moves == 0:
+        return LOSE
+
+    

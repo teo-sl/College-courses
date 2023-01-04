@@ -1,0 +1,48 @@
+
+
+
+def calcola_euristica(stato,giocatore):
+    
+
+    n_pos = # posizioni libere
+
+    if n_pos == 0:
+        return (n_bianche>n_nere) ? WIN : LOSE
+
+    h_num = (n_bianche-n_nere)*1/posizioni_libere
+
+    
+
+
+
+    
+    h_deletion = -infty
+    for (i,j) in board.dimensions:
+        if pedina in (i,j) == giocatore: 
+            for direzione from (i,j):
+                el_dir = eliminabili da (i,j) nella direzione corrente
+                h_deletion = max(el_dir,h_deletion)
+
+    if h_deletion == -infty:
+        h_deletion = 0
+
+    h_deletion*=30
+
+
+    for (i,j) in angolo:
+        n_bianche_angolo
+        n_nere_angolo
+    for (i,j) in lati:
+        n_bianche_lati
+        n_nere_lati
+    
+    h_speciali = (n_bianche_angolo-n_nere_angolo)*100 + (n_bianche_lati-n_nere_lati)*50
+
+    if giocatore == nero:
+        h_speciali*=-1
+
+    
+    return h_num*w1+h_deletion*w2+h_speciali*w3
+    
+
+
