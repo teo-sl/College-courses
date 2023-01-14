@@ -1,0 +1,81 @@
+Un approccio a questo tipo di problema può essere questo: gli archi con un
+valore di probabilità maggiore sono quelli che molto probabilmente saranno 
+percorsi con più frequenza dall'altro giocatore. Questo vuol dire che i nodi
+adiacenti all'arco saranno già stati occupati, se ciò non si verifica è possibile
+per A tagliare la linea di conquista dell'altro giocatore. Una possibile strategia 
+potrebbe essere quella di catturare quei nodi adiacenti agli archi con p maggiore, 
+nel caso questi fossero già stati catturati, prediligere quelli con probabilità minore
+evitando quindi le zone "morte" dove i nodi sono stati già catturati da B. Il nostro
+obiettivo sarà quindi quello di: da un lato garantirci il massimo punteggio, dall'altro,
+limitare l'avversario.
+
+------------------------------------------
+
+EURISTICA 
+
+def eval_state(game):
+
+    h_num = nodi catturati da me - nodi catturati dall'avversario
+
+    if non ci sono più nodi da catturare:
+        if h_num == 0: return DRAW
+        elif h_num > 0: return WIN
+        else: return LOSE
+    
+    h_edges = 0
+    scorri tra gli archi presenti trai nodi catturati,
+    per ogni arco, aggiungi a h_edges il valore di probabilità associato,
+    in particolare, somma p(e) se entrambi i nodi sono presenti, p(e)/2-0.1 se
+    invece solo uno dei nodi è presente e l'altro è stato catturato, p(e)/2 se
+    se l'altro non è stato ancora catturato.
+
+
+    h_mobility = 0
+    for nodo adiacente, calcola il numero di nodi liberi raggiungibili da esso
+    e somma a h_mobility, somma a h_mobility
+
+    return h_num*w1 + h_edges * w2 + h_mobility*w3
+
+
+Tramite questa euristica tieniamo in considerazione tre degli aspetti più importanti
+della partita, da un lato il punteggio, espresso che numero di nodi catturati,
+dall'altro la cattura dei nodi importanti per l'avversario, ovvero, quelli con p(e) 
+maggiore e infine la parte della mobilità. Poiché il gioco ha come obiettivo ultimo
+quello di catturare il numero maggiore di nodi, è necessario seguire quei percorsi che 
+permettano di effettuare le maggiori catture, e quindi, quei percorsi da cui è possibile
+ottenere il maggior numero di nodi.
+
+
+------------------------------------------
+
+ALGORITMO
+    
+L'algoritmo in questione deve tener in conto il fatto che non è possibile sapere cosa stia
+facendo il giocatore B. Il gioco è evidentemente a informazione imperfetta. Per tale motivo
+possiamo usare una variante del minimax. L'algoritmo di base si compone di una serie di chiamate
+ricorsice, e, in base al fatto che il nodo in questione è minimizzatore o massimizzatore
+il nodo in questione considera il minimo o il massimo trai figli. Potremmo quindi aggiungere
+un altro nodo, che non fa altro che fare un sampling dalle possibili scelte del giocatore B. Il nodo prenderà
+poi la somma pesata del risultato dell'esplorazione dei figli pesando tale risultato per la proabilità della mossa
+di cui è stato effettuato il sampling. La probabilità si basa sul valore di p(e). In tal modo andiamo
+a simulare lo spostamento del giocatore avversario simulando tra le mosse più probabili, ovvero, si tratta
+degli spostamenti sugli archi con un valore di probabilità maggiore. 
+
+
+            (Max)--------
+             /   \       \
+          (min)   (min)  (min)
+        0.8 |   0.2  \      \  
+        (Max)    (Max)   (Max)
+
+In questo modo il giocatore minizzatore sarà spinto, nella sua scelta, non solo dal 
+valore dell'euristica, ma soprattutto da quello della probabilità di passare da lì
+rispettando l'ipotesi che p(e) rappresenti la probabilità del giocatore di passare 
+da quell'arco.
+
+------------------------------------------
+
+SPECIFICHE
+
+Il gioco potrebbe essere rappresentato da un semplice grafo pesato e due set, dove, per ogni
+giocatore vengono riportati i nodi catturati.

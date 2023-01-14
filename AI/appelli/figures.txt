@@ -1,0 +1,96 @@
+Nel nostro problema, il numero totale di possibili figure inseribili è comunque finito
+dal momento che k<=4, quindi possono essere esplicitate.
+
+EURISTICA
+
+non è possibile provare a inserire tutte le figure, 
+sarà possibile fare poi un sampling sulle successive figure
+da considerare. Possiamo invece, calcolare, per ogni spazio libero, circondato
+da altre caselle, o dal bordo (chiamiamo questi spazi delle isole), i valori dei lati
+del rettangolo più grandi. 
+
+def eval_state(game):
+    
+    h_n = numero di figure già inserite
+    se non è possibile aggiungere la figura corrente restituisci h_n
+
+    h_rett = 0
+    h_quad = 0
+    per ogni isola nella matrice calcola il rettangolo di maggiore dimensione 
+    inseribile
+    indichiamo con width e height questi valori. Sommiamo a h_rett+=(width+height)/2
+    mentre a h_quad += min(width+height)*2
+
+    # utilizziamo quadrato e rettangolo come riferimento perché sono le figure dove si
+    possono inserire la maggior parte delle altre figure, non potendo enumerare tutte
+    le possibili. 
+
+    return normalizza tra 0 e 1 => w1*h_n + w2*h_rett + w3+h_quad
+
+
+Tramite questa euristica andremo a dare più valore alle soluzioni dove ci sono più figure e
+a partità di figure già inserite quelle che potenzialmente hanno una maggiore possibilità di
+accogliere nuove figure.
+Tramite il rettangolo e soprattutto il quadrato andiamo a generare degli spazi che possono
+accogliere più figure possibili di dimensione elevata (i.e. le più ingombranti), non avendo
+informazione sulla probabilità di comparsa delle figure non è possibile fare di meglio.
+
+
+
+ALGORITMO
+
+Possiamo usare, come algoritmo, una variante di A* che ordina i nodi sulla basse della 
+funzione di euristica definita sopra, prendendo per primi i valori migliori. 
+
+Questa versione di A* deve però essere modificata. Difatti, è necessario far sì che tra un nodo di
+mossa e l'altro, sia presente un nodo di generazione delle figure, che vada a generare un numero
+n di possibili future figure e poi, sviluppi le mosse dai nodi di mossa normali. 
+
+
+
+
+
+
+EURISTICA
+
+se il nodo è minimizzatore
+    h(m1)/2+h(m2)/2
+
+def eval_state(game):
+    se il numero di carte in mano al giocatore è 30 return WIN
+    se il numero di carte in mano al giocatore è > 30 return LOSE
+    
+    h_others = 0
+    se il giocatore == massimizzatore
+        h_ohters += m1 + m2 # inteso valore nominale carte
+    se il giocatore == m1 || g== m2
+        h_others += Max # inteso come valore nominale carte del massimizzatore
+        
+    h_val = punteggio attuale del giocatore
+    
+    carte_cattive = calcola numero di carte rimanenti nel mazzo
+                            che mi fanno sballare
+    h_sballo = carte_cattive / numero carte rimanenti nel mazzo
+    
+    # gli iperparametri andrebbero calibrati tramite prove pratiche    
+    return -w1*h_others + w2*h_val + w3 * h_sballo
+    
+
+h_others serve per tener conto del punteggio degli avversari, vince il giocatore con punteggio
+più alto
+
+h_val spinge il giocatore verso le parti dell'albero con maggiore punteggio
+
+h_sballo spinge il giocatore a trovare il modo di accumulare punti senza trovarsi in 
+situazioni "spinose" dove una carta ne provoca la sconfitta
+
++ supercazzole qb
+
+
+#############
+
+
+La funzione di probabilità che serve nel peso dei nodi di chance 
+
+
+#############
