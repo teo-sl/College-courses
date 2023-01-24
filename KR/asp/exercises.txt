@@ -1,0 +1,244 @@
+#############################
+COLORABILITA'
+
+Definiamo i predicati:
+col(c)          // vero se c è un colore
+node(x)         // vero se x è un nodo
+hasColor(x,c) // vero se x ha colore c
+
+hasColor(x,c) :- node(x), color(c), choice((x),(c))
+# tramite il choice, x sarà associato sempre allo stesso colore
+
+# definiamo i vincoli
+
+# non possono esistere nodi non colorati
+colored(x):- node(x), hasColor(x,_)
+:- n(x), not colored(x)
+
+# non possono esserci nodi adiacenti con lo stesso colore
+:- n(x),n(y), hasColor(x,c), hasColor(y,c), x!=y, edge(x,y)
+
+
+#############################
+
+N QUEENS
+
+# guessing part
+queen(i,j):- row(i),col(j), not not_queen(i,j)
+not_queen(i,j):- row(i),col(j), not queen(i,j)
+
+# oppure, usando il choice
+# in questo modo, ogni riga dovrà essere associata alla stessa colonna,
+# mentre una colonna può essere, potenzialmente, associata a due 
+# righe diverse (sebbene i vincoli eviterranno questa situazione)
+queen(i,j):- row(i),col(j), choice((i),(j))
+# la soluzione con guess e choice sono mutuamente esclusive
+
+
+# ogni riga deve avere una regina
+
+:- row(i), not queen(i,_)
+
+# non ci possono essere più regine nella stessa riga o colonna
+:- row(i), queen(i,j1),queen(i,j2), j1!=j2
+:- col(j), queen(i1,j),queen(i2,j), i1!=i2
+
+
+# non possono esserci due regine nella stessa diagonale
+:- queen(i1,j1), queen(i2,j2), i1+j1==i2+j2
+:- queen(i1,j1), queen(i2,j2), |i1-j1|==|i2-j2|
+
+
+
+#############################
+
+CLIQUE
+
+
+S(x) :- n(x), not not_S(x)
+not_S(x):- n(x), not S(x)
+
+:- {S(x)}<K
+:- S(x),S(y),x!=y, not edge(x,y)
+
+#############################
+
+Hamiltonian cycle
+
+
+# predicati di base n(x), edge(x,y) 
+
+# sceglie a caso la partenza
+start(x) :- n(x), choice((),(x))
+
+# definisce il primo passo del percorso partendo da start(x), tuttavia
+# come per definizione, la partenza non è ancora aggiunta, i.e.,
+# al momento della partenza non ha un arco entrante
+# Ogni nodo deve avere un solo figlio x->y e ogni nodo figlio deve avere un solo
+# padre y->x. Questa regola è applicata una sola volta.
+# Naturalmente, il nuvo nodo deve essere diverso da quello di partenza,
+# evitiamo i self loop
+hc(x,y) :- start(x),n(y),edge(x,y),choice((x),(y)),choice((x),(y)),x!=y
+
+# questa regola segue la precedente, e serve per gestire i casi diversi da quello
+# iniziale. Qui, x deve essere già presente nel percorso, e deve essere diverso da y
+# Inoltre, anche qui usiamo il choice per evitare che vi siano nodi con più padri 
+# o con più figli. 
+hc(x,y) :- hc(_,x), node(y),node(x),edge(x,y),choice((x),(y)),choice((x),(y)),x!=y
+
+# identifichiamo i nodi raggiunti dal percorso
+k(x) :- hc(_,x)
+
+# eliminiamo quelle soluzioni dove non tutti i nodi sono raggiunti
+# dall'hamiltonian cycle
+:- n(x), not k(x)
+
+#############################
+
+seat(x)
+table(x)
+person(x)
+
+friends(i,j)
+enemy(i,j)
+
+Table assignement problem
+
+
+# assegnamo a una persona un posto, tramite i due choice garantiamo che:
+# - se abbiamo uno stesso posto in un tavolo, solo una persona può essere seduta
+# - se abbiamo una stessa persona, questa deve essere assegnata a un solo posto
+S(p,t,s) :- seat(s), table(t), person(p), choice((s,t),(p)), choice((p),(s,t))
+
+# ogni persona deve essere assegnata a un tavolo e a una sedia
+hasSeat(x):- person(x), S(x,_,_)
+:- person(x), not hasSeat(x)
+# non ci possono essere due nemici allo stesso tavolo
+:- person(x), person(y), x!=y, enemy(x,y), S(x,t1,_), S(y,t2,_), t1==t2
+# non possono esserci due amici in tavoli diversi
+:- person(x), person(y), x!=y, friend(x,y), S(x,t1,_),S(y,t2,_), t1!=t2
+
+
+#############################
+
+Paper assignement
+
+
+paper(x)
+ref(x)
+hasRead(r,p) // se i referee r ha letto il paper p
+
+
+assigned(r,p) :- ref(r), paper(p), not not_assigned(r,p)
+not_assigned(r,p) :- ref(r), paper(p), not assigned(r,p)
+
+# l'assegnamento deve suppore che il referee abbia letto il paper
+:- assigned(r,p), not hasRead(r,p)
+# ogni paper deve essere assegnato esattamente a K refereee
+:- {assigned(_,p)}!=K
+# ogni referee deve aver assegnato un numero di paper compreso tra L e U
+:- {assigned(r,_)}>U
+:- {assigned(r,_)}<L
+
+
+#############################
+
+
+Spanning tree
+
+root(x) :- n(x), choice((),(x))
+
+tree(null,x) :- root(x)
+tree(x,y):- tree(_,x), x!=y, not root(y), edge(x,y), choice((y),(x))
+:- n(x), not tree(_,x)
+
+#############################
+
+Variation on seat problem
+
+person(x)
+seat(y)   # y is a number
+friend(x,y)
+enemy(x,y)
+
+
+hasSeat(x,y):- person(x), seat(y), choice((x),(y)), choice((y),(x))
+
+adiacent(x,y):- hasSeat(x,s1), hasSeat(x,s2), |s1-s2|==1
+
+:- person(x), not hasSeat(x,_)
+:- friend(x,y), x!=y, not adiacent(x,y)
+:- hasSeat(x,s1), hasSeat(y,s2), x!=y, enemy(x,y), |s1-s2|<K1
+
+
+
+#############################
+
+set(x)
+item(x)
+hasElement(s,x)
+
+Pariwise Disjoint
+
+
+S(x) :- set(x), not not_S(x)
+not_S(x) :- set(x), not S(x)
+
+
+:- S(x), S(y), x!=y, hasElement(x,i1), hasElement(x,i2), i1=i2
+:- {S(x)} != M
+
+
+
+
+
+#############################
+
+Tiles covering
+
+row(i), col(j), broke(i,j)
+# ci sono n tile
+tile(t) 
+
+# guess di come posizionare le tiles
+covered(i,j,t) :- row(i), col(j), not not_covered(i,j,t)
+not_covered(i,j,t) :- row(i), col(j), not covered(i,j,t)
+
+# selezioniamo tutte le posizioni coperte da tiles
+covered_unk(i,j) :- covered(i,j,_)
+
+# se una posizione non è rotta dovrà essere coperta
+:- row(i), col(j), not broke(i,j), not covered_unk(i,j)
+
+# non può capitare che una tile non occupi alcuna posizione
+:- tile(t), not covered(_,_,t)
+
+# verifichiamo se esiste un'altra posizione coperte oltre che a i,j
+altra_coperta(t,i,j) :- covered(l,m,t), l!=i, m!=j
+
+# ogni tile deve occupare almeno una posizione, 
+# usando questo vincolo non può capitare che una tile
+# occupi una posizione e non ne occupi altre
+:- covered(i,j,t), not altra_coperta(t,i,j)
+
+# ogni tile non può occupare più di 2 posizioni
+:- covered(i1,j1,t), covered(i2,j2,t), covered(i3,j3,t), i1!=i2, i1!=i3, i2!=i3, ....
+
+# arrivati a questo punto siamo sicuri che ogni tile ha sole due posizioni,
+# con questo vincolo garantiamo che le due tile non distino orizzontalmente più di uno
+:- covered(i1,j1,t), covered(i2,j2,t), |i1-i2|>1
+# con questo vincolo garantiamo che non distino più di uno in orizzontale
+:- covered(i1,j1,t), covered(i2,j2,t), |j1-j2|>1
+
+# con questo che non siano in diagonale
+:- covered(i1,j1,t), covered(i2,j2,t), i1+j1==i2+j2
+:- covered(i1,j1,t), covered(i2,j2,t), |i1-j1|==|i2-j2|
+
+# con questo vincolo garantiamo non possa capitare 
+# che una stessa posizione sia occupata da due tile
+:- covered(i,j,t1), covered(i,j,t2), t1!=t2
+
+
+
+
+

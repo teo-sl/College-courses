@@ -31,7 +31,14 @@ public class StripsNode extends AbstractNode {
     public void computeEur() {
         this.cost=depth;
         int match = (int) currentState.getFluents().stream().map(x->(initialState.getFluents().contains(x))).count();
-        this.cost+=StripsNode.initialState.getFluents().size()-match;
+        int noMatch = 0;
+        for(Fluent f : currentState.getFluents()) {
+            if(initialState.getFluents().contains(f))
+                match++;
+            else
+                noMatch++;
+        }
+        this.cost+=StripsNode.initialState.getFluents().size()-match+noMatch;
         
     }
 
@@ -54,9 +61,7 @@ public class StripsNode extends AbstractNode {
 
     public static void setStates(State initialState, State finalState, Set<String> blocks) {
         StripsNode.initialState = initialState;
-        StripsNode.blocks = blocks;
-    
-        
+        StripsNode.blocks = blocks;        
     }
 
     @Override

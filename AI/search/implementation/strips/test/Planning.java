@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import search.algorithms.BestFirst;
 import search.algorithms.IterativeDeepening;
 import search.implementation.strips.model.Fluent;
 import search.implementation.strips.model.FluentTypes;
@@ -15,14 +16,19 @@ import search.interfaces.Solver;
 public class Planning {
 
     public static void main(String[] args) {
-        Set<String> blocks = Set.of("A","B","C");
+        Set<String> blocks = Set.of("A","B","C","D","E","F");
 
         State initialState = new State(
             Set.of(
                 new Fluent(FluentTypes.ON, List.of("A","B")),
                 new Fluent(FluentTypes.ON, List.of("B","C")),
                 new Fluent(FluentTypes.ON, List.of("C","t")),
-                new Fluent(FluentTypes.CLEAR, List.of("A"))
+                new Fluent(FluentTypes.CLEAR, List.of("A")),
+
+                new Fluent(FluentTypes.ON, List.of("D","E")),
+                new Fluent(FluentTypes.ON, List.of("E","F")),
+                new Fluent(FluentTypes.ON, List.of("F","t")),
+                new Fluent(FluentTypes.CLEAR, List.of("D"))
                 //new Fluent(FluentTypes.CLEAR, List.of("B")),
                 //new Fluent(FluentTypes.CLEAR, List.of("C"))
             )
@@ -30,9 +36,14 @@ public class Planning {
 
         State finalState = new State(
             Set.of(
-                new Fluent(FluentTypes.ON, List.of("A","t")),
-                new Fluent(FluentTypes.ON, List.of("B","A")),
-                new Fluent(FluentTypes.ON, List.of("C","B")),
+                new Fluent(FluentTypes.ON, List.of("A","D")),
+                new Fluent(FluentTypes.ON, List.of("D","B")),
+                new Fluent(FluentTypes.ON, List.of("B","t")),
+                new Fluent(FluentTypes.CLEAR, List.of("A")),
+
+                new Fluent(FluentTypes.ON, List.of("C","E")),
+                new Fluent(FluentTypes.ON, List.of("E","F")),
+                new Fluent(FluentTypes.ON, List.of("F","t")),
                 new Fluent(FluentTypes.CLEAR, List.of("C"))
             )
         );
@@ -43,7 +54,7 @@ public class Planning {
         
         StripsNode root = new StripsNode(null,new LinkedList<>(),finalState);
 
-        Solver alg = new IterativeDeepening();
+        Solver alg = new BestFirst();
 
         long start =System.currentTimeMillis();
         Node result = alg.solve(root);

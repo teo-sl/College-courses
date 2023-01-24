@@ -3,7 +3,6 @@ WHITE = 1
 BLACK = -1
 
 MAXIMIZER = WHITE
-DEPTH = 50
 
 class Game():
     def __init__(self,board=None):
@@ -66,13 +65,13 @@ class Game():
 
 
 
-def get_best_move(board,player):
+def get_best_move(board,player,depth):
     moves = board.get_moves()
     value = -float('inf')
     best_move = None
     for move in moves:
         board.apply_move(player,move)
-        v = minimax(board,DEPTH,-player)
+        v = minimax(board,depth,-player)
         if v>value:
             value = v
             best_move = move

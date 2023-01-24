@@ -3,6 +3,7 @@ package search.implementation.strips.model;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Action {
@@ -27,7 +28,15 @@ public class Action {
 
 
 
+    public static Set<Action> generateActions2(State s, Set<String> blocks) {
+        Set<Action> ret = new HashSet<>();
+        Set<String> freeBlocks = s.getFluents().stream().filter(x -> x.getType()==FluentTypes.CLEAR).map(x->x.getValues().get(0)).collect(Collectors.toSet());
+        for(String b : freeBlocks) {
+            ret.add(new Action(List.of(), null, null, null, null))
+        }
 
+
+    }
 
 
     public static Set<Action> generateActions(State s,Set<String> blocks) {
