@@ -242,3 +242,191 @@ altra_coperta(t,i,j) :- covered(l,m,t), l!=i, m!=j
 
 
 
+#############################
+
+
+Hamiltonian cycle redefined
+
+k(x) :- n(x), choice((),(x))
+k(x) :- S(_,x)
+S(x,y) :- k(x), edge(x,y), choice((x),(y)), choice((y),(x)), # bo? x!=y
+
+in(x) :- S(_,x)
+out(x) :- S(x,_)
+
+:- n(x), not in(x)
+:- n(x), not out(x)
+
+
+#############################
+
+hamiltonian
+
+k(x) :- n(x), choice((),(x))
+k(x) :- S(_,x)
+S(x,y) :- k(x), edge(x,y), x!=y, choice((x),(y)), choice((y),(x))
+
+in(x) :- S(_,x)
+out(x) :- S(x,_)
+:- n(x), not in(x)
+:- n(x), not out(x)
+
+
+
+#############################
+
+
+hamiltonian
+
+k(x) :- n(x), choice((),(x))
+
+S(x,y) :- k(x), edge(x,y),x!=y, choice((x),(y)), choice((y),(x))
+k(x) :- S(_,x)
+
+in(x) :- S(_,x)
+out(x) :- S(x,_)
+
+:- n(x), not in(x)
+:- n(x), not out(x)
+
+
+#############################
+
+
+colorability
+
+color(c)
+n(x), edge(x)
+hasColor(x,c)
+
+hasColor(x,c) :- color(c), n(x), chice((x),(c))
+
+:- edge(x,y), hasColor(x,c1), hasColor(x,c2), c1=c2
+colored(x) :- hasColor(x,_)
+:- n(x), not colored(x)
+
+
+#############################
+
+Clique
+
+S(x) :- n(x), not R(x)
+R(x) :- n(x), not S(x)
+
+:- S(x),S(y),x!=y,not edge(x,y)
+
+#############################
+
+tree 
+
+root(x) :- n(x), choice((),(x))
+
+tree(null,x) :- root(x)
+tree(x,y) :- tree(_,x), not root(y), choice((y),(x)), x!=y, edge(x,y)
+
+reached(x) :- tree(_,x)
+:- n(x), not reached(x)
+
+
+#############################
+
+num(N) deve essere un numero compreso tra 1 e 9
+col(j) row(i), deve essere un numero compreso tra 1 e 9
+
+
+sudoku
+
+# guessing
+hasValue(N,i,j) :- row(i), col(j), num(N), choice((i,j),N)
+:- row(i),col(j), not hasValue(_,i,_j)
+
+# ogni riga e colonna devono avere tutti i numeri tra 1 e 9
+
+:- row(i), hasValue(N1,i,j1), hasValue(N2,i,j2), j1!=j2, N1=N2
+:- col(j), hasValue(N1,i1,j), hasValue(N2,i2,j), i1!=i2, N1=N2
+
+# ogni sottoquadrato 3x3 deve avere tutti i numeri da 1 a 9, 
+# quindi, non possono esistere due assegnamenti uguali
+
+:- row(i1), col(j1), row(i2), col(j2), i2//3=i1//3, j1//3=j2//3,
+    i1!=i2, j1!=j2,
+    hasValue(N,i1,j1), hasValue(N,i2,j2)
+
+
+#############################
+
+knsapsack
+
+# dobbiamo scegliere un sottoinsieme degli x elementi presenti
+# in modo tale che, il loro valore complessivo sia maggiore di una
+# costante V, e il loro peso complessivo sia minore di una certa 
+# costante W
+
+# consideriamo i predicati di base
+item(x)
+hasValue(x,N)
+hasWeight(x,W)
+
+
+# guessing
+S(x) :- item(x), not R(x)
+R(x) :- item(x), not S(x)
+
+# somma peso e valore
+
+somma_valori(null,null,0).
+somma_valori(x,y,N+V) :- somma_valori(_,x,N), S(y), hasValue(y,V), y!=x,
+                        choice((x),(y)), choice((y),(x))
+
+
+
+somma_pesi(null,null,0).
+somma_pesi(x,y,N+W) :- somma_pesi(_,x,N), S(y), hasWeight(y,W), y!=x,
+                        choice((x),(y)), choice((y),(x))
+
+peso_totale(P) :- somma_pesi(_,_,P), not somma_pesi(_,_,R), R>P
+valore_totale(V) :- somma_valori(_,_,V), not somma_valori(_,_,R), R>V
+
+# definizione vincoli
+
+:- peso_totale(P), P>MAX_WEIGHT
+:- valore_totale(V), V<MIN_VALUE
+
+
+
+#############################
+
+SAT
+
+
+variable(x)
+
+
+S(x) :- variable(x) and not R(x)
+R(x) :- variable(x) and not S(x)
+
+
+# now, for each constraint in the formula, we can add
+# a constraint in the program, for example, if we have:
+#           ((not a) or b or c)
+# the relative constraint will not tolerat this truth
+# assignement: (a, not(b), not(c))
+# So, we can write
+
+:- S(a), R(b), R(c)
+
+# this is becaouse we suppose that in R we put the false variable
+# while in S the true ones. Here we supposed that a,b,c are
+# variables
+
+
+#############################
+
+root(X) :- n(X), choice((),(X))
+
+hc(X,Y) :- edge(X,Y), x!=y, choice((X),(Y)), choice((Y),(X))
+
+reached(X) :- hc(Y,X), root(Y).
+reached(X) :- reached(Y), hc(Y,X).
+
+:- n(X), not reached(X).

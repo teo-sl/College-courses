@@ -1,0 +1,110 @@
+• Fornitore(Codice,Nome,Sede)
+• Prodotto(Cod,Nome,Marca)
+• Fornitura(Codice,Fornitore,Prodotto,Quantità,Data)
+per la gestione di un magazzino merci. In particolare, un Fornitore effettua Forniture di uno o più più Prodotti presso il magazzino.
+Si scrivano in Datalog con aritmetica le seguenti query:
+1. I fornitori che hanno fornito almeno due prodotti diversi.
+2. I prodotti che vengono forniti solo da fornitori con sede italiana.
+3. I fornitori che hanno fornito gli stessi prodotti.
+4. Per ogni fornitore, il totale di prodotti forniti (si supponga di disporre di un opportuno operatore di
+confronto “<” fra i codici dei prodotti).
+5. Per ogni prodotto, il numero di fornitori che lo forniscono (si supponga di disporre di un opportuno
+operatore di confronto “<” fra i codici dei fornitori).
+
+
+
+prodottiNo(p) :- prodotto(p,_,_), fornitura(_,f,p,_,_), fornitore(f,_,s), s!="IT"
+q(p) :- prodotto(p,_,_), not prodottiNo(p)
+
+{(p) | E x1,x2. prodott(p,x1,x2) and not [ E x3,...,x6,f,s
+    fornitura(x3,f,p,x4,x5) and fornitore(f,x6,s) and sede!="IT"
+]}
+
+------------------------------------------------------------------------
+
+fornisce(f,p) :- fornitura(_,f,p,_,_)
+coppieNo(f1,f2) :- fornisce(f1,p), not fornisce(f2,p), fornitore(f2,_,_)
+coppieNo(f1,f2) :- fornisce(f2,p), not fornisce(f1,p), fornitore(f1,_,_)
+
+
+
+q(f1,f2) :- fornitore(f1,_,_), fornitore(f2,_,_), not coppieNo(f1,f2)
+
+
+
+{(f1,f2) | E
+    fornitore(f1,x1,x2) and fornitore(f2,x3,x4) and not [ E p, x5,...,x12
+        prodotto(p,x8,x9) and
+        (fornitura(x5,f1,p,x6,x7) and not fornitura(x10,f2,p,x11,x12)) or
+        (fornitura(x10,f2,p,x11,x12) and not fornitura(x5,f1,p,x6,x7))
+    ]
+}
+
+
+------------------------------------------------------------------------
+
+contaForniture(f,null,null,0).
+contaForniture(f,p1,p2,N+1) :- contaForniture(f,_,p1,N), fornitura(_,f,p2,_,_), 
+                                choice((p1),(p2)), choice((p2),(p1)), p1!=p2
+numerForniture(f,N) :- contaForniture(f,_,_,N), not contaForniture(f,_,_,M), M>N
+--------------
+
+
+Sia dato il seguente schema di database:
+CD(CodCD, Nome, Tipologia, Anno)
+MUSICISTA (CodMusicista, Nome, Cognome, DataNascita, LuogoNascita)
+CANZONE(CodCanzone, Titolo, Durata, CD, Musicista)
+NEGOZIO(CodNegozio, NomeNegozio, Indirizzo, Città)
+VENDITA (CD, Negozio, Data, NumeroCopie Vendute) 3
+
+• Le coppie di musicisti «MI, M2> tali che l'insieme dei negozi in cui è stato venduto almeno un CD contenente una canzone di M1 è lo stesso dell'insieme dei negozi in cui è stato venduto almeno un CD contenente una canzone di M2.
+• :
+Per ogni città in cui sono presenti almeno 100 negozi, restituire i negozi in cui nell'anno 2018 è stato venduto il numero massimo di copie di CD rispetto ai negozi della stessa città.
+
+
+venduto_musicista(m,d) :- vendita(cd,d,_,_),canzone(_,_,_,cd,m)
+coppieNo(m1,m2) :- musicista(m1,_), musicista(m2,_),
+                    venduto_musicista(m1,d), not venduto_musicista(m2,d)
+coppieNo(m1,m2) :- musicista(m1,_), musicista(m2,_), 
+                    venduto_musicista(m2,d), not venduto_musicista(m1,d)
+q(m1,m2) :- musicista(m1,_), musicista(m2,_), not coppieNo(m1,m2)
+
+{(m1,m2) | musicista(m1,_), musicista(m2,_), not [ E
+                (vendita(cd,d,_,_), canzone(_,_,_,cd,m1)) and not (vendita(cd1,d,_,_), canzone(_,_,_,cd1,m2)) or
+                .... stessa cosa ma con le operazioni inverse
+            ]
+}
+
+
+
+negoziNo(n) :- negozio(n,_,_,_), vendita(cd,n,_m_), Canzone(_,_,_,cd,a), Musicista(a,"Rossi",_,_,_)
+
+q(n) :- Negozio(n,_,_,"Roma"), not negoziNo(n)
+
+
+
+--------------------------
+
+{(s1,s2) | E x1,x2,c
+    supervisore(s1,x1,c), supervisore(s2,x2,c), s1!=s2, not [E t,x3,x4
+        (relazione(t,x3,s1) and not relazione(t,x4,s2)) or
+        (relazione(t,x4,s2) and not relazione(t,x3,s1))
+    ]
+    ----
+        (relazione(t,x3,s1) or relazione(t,x4,s2)) and
+        (not relazione(t,x3,s1) or not relazione(t,x4,s2))
+}
+
+
+da tutti i supervisori di catanzaro
+
+
+{(t) | E x1,x2.
+    terreno(t,x1,x2) and not [ E x3,x4,s.
+        supervisore(s,x3,"CZ") and not relazione(t,x4,s)
+    ]
+}
+
+
+% per ogni terreno il numero del lotto di area massima
+q(t,l) :- lotto(t,l,A), not lotto(t,l1,B), l1!=l, B>A
